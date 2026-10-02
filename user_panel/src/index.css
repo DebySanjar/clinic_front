@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+    background-color: var(--tg-theme-bg-color, #f9fafb);
+    color: var(--tg-theme-text-color, #111827);
+  }
+
+  /* Telegram WebApp scroll fix */
+  body { overflow-x: hidden; }
+}
