@@ -1,10 +1,6 @@
-import { create } from 'zustand'
+﻿import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { authApi } from '@/api'
-
-// Hardcoded admin credentials (frontend-only auth)
-const ADMIN_USERNAME = 'admin'
-const ADMIN_PASSWORD = 'parol'
 
 interface AuthStore {
   isAuthenticated: boolean
@@ -20,12 +16,6 @@ export const useAuthStore = create<AuthStore>()(
       token: null,
 
       login: async (username: string, password: string) => {
-        // Frontend credential check
-        if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
-          return false
-        }
-
-        // Get JWT token from backend
         try {
           const res = await authApi.login(username, password)
           const { access, refresh } = res.data
@@ -34,9 +24,7 @@ export const useAuthStore = create<AuthStore>()(
           set({ isAuthenticated: true, token: access })
           return true
         } catch {
-          // Backend token olish muvaffaqiyatsiz bo'lsa ham frontend auth
-          set({ isAuthenticated: true, token: null })
-          return true
+          return false
         }
       },
 
@@ -48,7 +36,11 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: 'dentflow-auth',
-      partialize: (state) => ({ isAuthenticated: state.isAuthenticated }),
+      // token ham saqlansin — refresh bo'lganda ishlaydi
+      partialize: (state) => ({
+        isAuthenticated: state.isAuthenticated,
+        token: state.token,
+      }),
     }
   )
 )
