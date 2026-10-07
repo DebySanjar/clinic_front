@@ -222,10 +222,11 @@ export default function AppointmentsPage() {
               ['Holat', STATUS_CONFIG[detailAppt.status].label],
               detailAppt.notes ? ['Izoh', detailAppt.notes] : null,
               detailAppt.delay_minutes > 0 ? ['Kechikish', `${detailAppt.delay_minutes} daqiqa`] : null,
-            ].filter(Boolean).map(([k, v]) => (
-              <div key={k as string} className="flex justify-between py-2 border-b border-gray-50 last:border-0">
+            ].filter((item): item is [string, string] => item !== null)
+            .map(([k, v]) => (
+              <div key={k} className="flex justify-between py-2 border-b border-gray-50 last:border-0">
                 <span className="text-gray-500">{k}</span>
-                <span className="font-medium text-gray-900 text-right max-w-[200px]">{v as string}</span>
+                <span className="font-medium text-gray-900 text-right max-w-[200px]">{v}</span>
               </div>
             ))}
           </div>
