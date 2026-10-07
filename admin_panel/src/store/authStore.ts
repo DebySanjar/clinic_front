@@ -23,12 +23,7 @@ export const useAuthStore = create<AuthStore>()(
           localStorage.setItem('refresh_token', refresh)
           set({ isAuthenticated: true, token: access })
           return true
-        } catch (err: any) {
-          console.error('=== LOGIN ERROR ===')
-          console.error('Status:', err?.response?.status)
-          console.error('Data:', err?.response?.data)
-          console.error('Message:', err?.message)
-          console.error('Full error:', err)
+        } catch {
           return false
         }
       },
@@ -41,6 +36,7 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: 'dentflow-auth',
+      // token ham saqlansin — refresh bo'lganda ishlaydi
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
         token: state.token,
