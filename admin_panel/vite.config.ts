@@ -11,11 +11,6 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-      },
-    },
+    // Proxy disabled - using production backend directly via VITE_API_BASE_URL
   },
 })
