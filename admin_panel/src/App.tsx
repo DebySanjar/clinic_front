@@ -13,18 +13,28 @@ import SettingsPage from '@/pages/Settings/SettingsPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const hasHydrated = useAuthStore((s) => s._hasHydrated)
   
   console.log('🔒 ProtectedRoute check:', { 
     isAuthenticated,
+    hasHydrated,
     localStorage_has_auth: !!localStorage.getItem('dentflow-auth'),
     localStorage_content: localStorage.getItem('dentflow-auth')
   })
   
-  if (!isAuthenticated) {
-    console.log('❌ NOT AUTHENTICATED - Redirecting to login')
+  // Wait for hydration to complete
+  if (!hasHydrated) {
+    console.log('⏳ Waiting for hydration...')
+    return null // or return a loading spinner
   }
   
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />
+  if (!isAuthenticated) {
+    console.log('❌ NOT AUTHENTICATED - Redirecting to login')
+    return <Navigate to="/login" replace />
+  }
+  
+  console.log('✅ AUTHENTICATED - Rendering protected content')
+  return <>{children}</>
 }
 
 export default function App() {
