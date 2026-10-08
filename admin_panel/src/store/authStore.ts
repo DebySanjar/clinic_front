@@ -9,6 +9,8 @@ const ADMIN_PASSWORD = 'parol'
 interface AuthStore {
   isAuthenticated: boolean
   token: string | null
+  _hasHydrated: boolean
+  setHasHydrated: (state: boolean) => void
   login: (username: string, password: string) => Promise<boolean>
   logout: () => void
 }
@@ -18,6 +20,11 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       isAuthenticated: false,
       token: null,
+      _hasHydrated: false,
+
+      setHasHydrated: (state) => {
+        set({ _hasHydrated: state })
+      },
 
       login: async (username: string, password: string) => {
         console.log('=== LOGIN START ===', { username })
@@ -78,6 +85,7 @@ export const useAuthStore = create<AuthStore>()(
           isAuthenticated: state?.isAuthenticated,
           localStorage: localStorage.getItem('dentflow-auth')
         })
+        state?.setHasHydrated(true)
       },
     }
   )
