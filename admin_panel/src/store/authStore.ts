@@ -45,18 +45,25 @@ export const useAuthStore = create<AuthStore>()(
           
           set({ isAuthenticated: true, token: access })
           
-          console.log('=== LOGIN SUCCESS WITH BACKEND TOKEN ===')
+          console.log('=== LOGIN SUCCESS WITH BACKEND TOKEN ===', {
+            isAuthenticated: true,
+            willPersist: true
+          })
           return true
         } catch (error) {
           console.error('=== BACKEND TOKEN ERROR ===', error)
           // Backend token olish muvaffaqiyatsiz bo'lsa ham frontend auth
           set({ isAuthenticated: true, token: null })
-          console.log('=== LOGIN SUCCESS (frontend only) ===')
+          console.log('=== LOGIN SUCCESS (frontend only) ===', {
+            isAuthenticated: true,
+            willPersist: true
+          })
           return true
         }
       },
 
       logout: () => {
+        console.log('=== LOGOUT ===')
         localStorage.removeItem('access_token')
         localStorage.removeItem('refresh_token')
         set({ isAuthenticated: false, token: null })
@@ -65,6 +72,13 @@ export const useAuthStore = create<AuthStore>()(
     {
       name: 'dentflow-auth',
       partialize: (state) => ({ isAuthenticated: state.isAuthenticated }),
+      onRehydrateStorage: () => (state) => {
+        console.log('🔄 ZUSTAND HYDRATION:', {
+          state,
+          isAuthenticated: state?.isAuthenticated,
+          localStorage: localStorage.getItem('dentflow-auth')
+        })
+      },
     }
   )
 )

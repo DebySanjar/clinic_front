@@ -13,6 +13,17 @@ import SettingsPage from '@/pages/Settings/SettingsPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  
+  console.log('🔒 ProtectedRoute check:', { 
+    isAuthenticated,
+    localStorage_has_auth: !!localStorage.getItem('dentflow-auth'),
+    localStorage_content: localStorage.getItem('dentflow-auth')
+  })
+  
+  if (!isAuthenticated) {
+    console.log('❌ NOT AUTHENTICATED - Redirecting to login')
+  }
+  
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />
 }
 
