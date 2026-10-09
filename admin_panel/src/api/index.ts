@@ -6,6 +6,7 @@ import type {
   PaginatedResponse
 } from '@/types'
 
+
 // ─── Auth ────────────────────────────────────────────────────────────────────
 
 export const authApi = {
