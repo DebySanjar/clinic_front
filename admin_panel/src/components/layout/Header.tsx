@@ -3,13 +3,15 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/authStore'
 
 const PAGE_TITLES: Record<string, string> = {
-  '/dashboard':    'Dashboard',
-  '/doctors':      'Shifokorlar',
-  '/services':     'Xizmatlar va narxlar',
-  '/appointments': 'Qabullar jadvali',
-  '/patients':     'Bemorlar',
-  '/stats':        'Statistika',
-  '/settings':     'Sozlamalar',
+  '/dashboard':          'Dashboard',
+  '/doctors':            'Shifokorlar',
+  '/services':           'Xizmatlar va narxlar',
+  '/appointments':       'Qabullar jadvali',
+  '/patients':           'Bemorlar',
+  '/stats':              'Statistika',
+  '/settings':           'Sozlamalar',
+  '/surveys/list':       "So'rovnomalar",
+  '/surveys/applicants': 'Arizachilar',
 }
 
 export default function Header() {

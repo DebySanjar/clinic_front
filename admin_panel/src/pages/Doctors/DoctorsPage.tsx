@@ -6,6 +6,7 @@ import { z } from 'zod'
 import toast from 'react-hot-toast'
 import { doctorsApi, servicesApi } from '@/api'
 import { Button, Input, Modal, Confirm, Spinner, Badge, EmptyState } from '@/components/ui'
+import { SearchInput } from '@/components/ui/SearchInput'
 import { TimePickerDrum } from '@/components/ui/DrumPicker'
 import type { Doctor, DoctorFormData } from '@/types'
 import { WEEKDAYS_FULL, cn } from '@/utils'
@@ -309,17 +310,11 @@ export default function DoctorsPage() {
         <div className="flex flex-wrap gap-2 flex-1">
 
           {/* Search */}
-          <div className="relative min-w-[220px] flex-1 max-w-xs">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <circle cx="11" cy="11" r="8"/><path strokeLinecap="round" d="M21 21l-4.35-4.35"/>
-            </svg>
-            <input
-              type="text"
-              placeholder="Ism, mutaxassislik, telefon..."
+          <div className="min-w-[220px] flex-1 max-w-xs">
+            <SearchInput
               value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="input pl-9 text-sm h-9"
+              onChange={setSearch}
+              placeholder="Ism, mutaxassislik, telefon..."
             />
           </div>
 

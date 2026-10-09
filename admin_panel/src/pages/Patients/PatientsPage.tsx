@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { patientsApi } from '@/api'
 import { Spinner, EmptyState, Modal, Badge } from '@/components/ui'
+import { SearchInput } from '@/components/ui/SearchInput'
 import type { Appointment, Patient } from '@/types'
 import { formatDate, formatTime, STATUS_CONFIG } from '@/utils'
 
@@ -29,17 +30,12 @@ export default function PatientsPage() {
   return (
     <div className="space-y-5">
       {/* Search */}
-      <div className="flex gap-3 items-center">
-        <div className="relative flex-1 max-w-md">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-            <circle cx="11" cy="11" r="8"/><path strokeLinecap="round" d="M21 21l-4.35-4.35"/>
-          </svg>
-          <input
-            type="text"
-            placeholder="Ism, familiya yoki telefon..."
+      <div className="flex gap-3 items-center flex-wrap">
+        <div className="min-w-[220px] flex-1 max-w-md">
+          <SearchInput
             value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1) }}
-            className="input pl-9"
+            onChange={(v) => { setSearch(v); setPage(1) }}
+            placeholder="Ism, familiya yoki telefon..."
           />
         </div>
         <span className="text-sm text-gray-500">{total} ta bemor</span>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -6,6 +6,7 @@ import { z } from 'zod'
 import toast from 'react-hot-toast'
 import { servicesApi } from '@/api'
 import { Button, Input, Select, Spinner, Modal, Confirm, Badge, EmptyState } from '@/components/ui'
+import { SearchInput } from '@/components/ui/SearchInput'
 import type { Service, ServiceFormData } from '@/types'
 import { formatCurrency } from '@/utils'
 
@@ -27,6 +28,7 @@ export default function ServicesPage() {
   const [editService, setEditService] = useState<Service | null>(null)
   const [deleteService, setDeleteService] = useState<Service | null>(null)
   const [filterCat, setFilterCat] = useState<string>('')
+  const [search, setSearch] = useState('')
 
   const { data: services = [], isLoading } = useQuery({
     queryKey: ['services'],
@@ -90,9 +92,18 @@ export default function ServicesPage() {
     }
   }
 
-  const filtered = filterCat
-    ? services.filter(s => String(s.category) === filterCat)
-    : services
+  const filtered = useMemo(() => {
+    let result = filterCat ? services.filter(s => String(s.category) === filterCat) : services
+    if (search) {
+      const q = search.toLowerCase()
+      result = result.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        (s.name_ru || '').toLowerCase().includes(q) ||
+        (s.category_name || '').toLowerCase().includes(q)
+      )
+    }
+    return result
+  }, [services, filterCat, search])
 
   const catOptions = categories.map(c => ({ value: c.id, label: `${c.icon} ${c.name}` }))
 
@@ -100,6 +111,13 @@ export default function ServicesPage() {
     <div className="space-y-5">
       {/* Toolbar */}
       <div className="flex items-center gap-3 flex-wrap">
+        <div className="min-w-[220px] flex-1 max-w-xs">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Xizmat nomi, kategoriya..."
+          />
+        </div>
         <div className="flex-1">
           <select
             value={filterCat}

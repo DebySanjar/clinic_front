@@ -157,3 +157,34 @@ export const settingsApi = {
   update: (data: Partial<ClinicSettings>) =>
     apiClient.patch<ClinicSettings>('/settings/', data),
 }
+
+// ─── Surveys ─────────────────────────────────────────────────────────────────
+
+export const surveysApi = {
+  list: () =>
+    apiClient.get<any[]>('/surveys/'),
+
+  get: (id: number) =>
+    apiClient.get<any>(`/surveys/${id}/`),
+
+  create: (data: any) =>
+    apiClient.post<any>('/surveys/', data),
+
+  update: (id: number, data: any) =>
+    apiClient.put<any>(`/surveys/${id}/`, data),
+
+  patch: (id: number, data: any) =>
+    apiClient.patch<any>(`/surveys/${id}/`, data),
+
+  delete: (id: number) =>
+    apiClient.delete(`/surveys/${id}/`),
+
+  responses: (id: number) =>
+    apiClient.get<any[]>(`/surveys/${id}/responses/`),
+
+  stats: (id: number) =>
+    apiClient.get<any>(`/surveys/${id}/stats/`),
+
+  applicants: (surveyId?: number) =>
+    apiClient.get<any[]>('/surveys/applicants/', { params: surveyId ? { survey_id: surveyId } : {} }),
+}

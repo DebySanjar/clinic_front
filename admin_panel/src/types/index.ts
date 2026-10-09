@@ -14,6 +14,7 @@ export interface Doctor {
   first_name: string
   last_name: string
   full_name: string
+  gender: 'male' | 'female'
   speciality: string
   phone: string
   telegram_id: number | null

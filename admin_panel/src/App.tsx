@@ -10,6 +10,9 @@ import AppointmentsPage from '@/pages/Appointments/AppointmentsPage'
 import PatientsPage from '@/pages/Patients/PatientsPage'
 import StatsPage from '@/pages/Stats/StatsPage'
 import SettingsPage from '@/pages/Settings/SettingsPage'
+import SurveysPage from '@/pages/Surveys/SurveysPage'
+import ApplicantsPage from '@/pages/Surveys/ApplicantsPage'
+import SurveyFillPage from '@/pages/Surveys/SurveyFillPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
@@ -48,7 +51,11 @@ export default function App() {
           <Route path="patients" element={<PatientsPage />} />
           <Route path="stats" element={<StatsPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="surveys/list" element={<SurveysPage />} />
+          <Route path="surveys/applicants" element={<ApplicantsPage />} />
         </Route>
+        {/* Public survey fill - no auth needed */}
+        <Route path="/survey/:slug" element={<SurveyFillPage />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
