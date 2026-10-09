@@ -22,7 +22,7 @@ export const doctorsApi = {
   list: (params?: { is_active?: boolean }) =>
     apiClient.get<Doctor[] | { results: Doctor[]; count: number }>('/doctors/', { params }).then(r => ({
       ...r,
-      data: Array.isArray(r.data) ? r.data : (r.data as any).results ?? [],
+      data: (Array.isArray(r.data) ? r.data : (r.data as { results: Doctor[] }).results ?? []) as Doctor[],
     })),
 
   get: (id: number) =>
@@ -56,7 +56,7 @@ export const servicesApi = {
   list: (params?: { is_active?: boolean; doctor_id?: number; category?: number }) =>
     apiClient.get<Service[] | { results: Service[]; count: number }>('/services/', { params }).then(r => ({
       ...r,
-      data: Array.isArray(r.data) ? r.data : (r.data as any).results ?? [],
+      data: (Array.isArray(r.data) ? r.data : (r.data as { results: Service[] }).results ?? []) as Service[],
     })),
 
   get: (id: number) =>
@@ -77,7 +77,7 @@ export const servicesApi = {
   categories: () =>
     apiClient.get<ServiceCategory[] | { results: ServiceCategory[]; count: number }>('/service-categories/').then(r => ({
       ...r,
-      data: Array.isArray(r.data) ? r.data : (r.data as any).results ?? [],
+      data: (Array.isArray(r.data) ? r.data : (r.data as { results: ServiceCategory[] }).results ?? []) as ServiceCategory[],
     })),
 
   createCategory: (data: Omit<ServiceCategory, 'id'>) =>
