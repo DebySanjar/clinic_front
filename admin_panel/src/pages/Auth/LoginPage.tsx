@@ -254,16 +254,9 @@ export default function LoginPage() {
 
   const onSubmit = async (data: FormData) => {
     setLoading(true)
-    console.log('📝 Form submitted:', data.username)
-    
     const ok = await login(data.username, data.password)
-    console.log('✅ Login result:', ok)
-    
     setLoading(false)
-    
     if (ok) {
-      console.log('🚀 Navigating to dashboard...')
-      // Small delay to ensure state is persisted
       setTimeout(() => {
         navigate('/dashboard', { replace: true })
       }, 100)

@@ -17,14 +17,15 @@ apiClient.interceptors.request.use((config) => {
   return config
 })
 
-// Response interceptor — 401 da logout
+// Response interceptor — 401 da logout (faqat token bilan qilingan so'rovlarda)
 apiClient.interceptors.response.use(
   (res) => res,
   async (error) => {
-    if (error.response?.status === 401) {
+    const isLoginEndpoint = error.config?.url?.includes('/auth/login/')
+    if (error.response?.status === 401 && !isLoginEndpoint) {
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
-      localStorage.removeItem('is_auth')
+      localStorage.removeItem('dentflow-auth')
       window.location.href = '/login'
     }
     return Promise.reject(error)

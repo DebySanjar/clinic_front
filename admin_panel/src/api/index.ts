@@ -20,7 +20,10 @@ export const authApi = {
 
 export const doctorsApi = {
   list: (params?: { is_active?: boolean }) =>
-    apiClient.get<Doctor[]>('/doctors/', { params }),
+    apiClient.get<Doctor[] | { results: Doctor[]; count: number }>('/doctors/', { params }).then(r => ({
+      ...r,
+      data: Array.isArray(r.data) ? r.data : (r.data as any).results ?? [],
+    })),
 
   get: (id: number) =>
     apiClient.get<Doctor>(`/doctors/${id}/`),
@@ -51,7 +54,10 @@ export const doctorsApi = {
 
 export const servicesApi = {
   list: (params?: { is_active?: boolean; doctor_id?: number; category?: number }) =>
-    apiClient.get<Service[]>('/services/', { params }),
+    apiClient.get<Service[] | { results: Service[]; count: number }>('/services/', { params }).then(r => ({
+      ...r,
+      data: Array.isArray(r.data) ? r.data : (r.data as any).results ?? [],
+    })),
 
   get: (id: number) =>
     apiClient.get<Service>(`/services/${id}/`),
@@ -69,7 +75,10 @@ export const servicesApi = {
     apiClient.delete(`/services/${id}/`),
 
   categories: () =>
-    apiClient.get<ServiceCategory[]>('/service-categories/'),
+    apiClient.get<ServiceCategory[] | { results: ServiceCategory[]; count: number }>('/service-categories/').then(r => ({
+      ...r,
+      data: Array.isArray(r.data) ? r.data : (r.data as any).results ?? [],
+    })),
 
   createCategory: (data: Omit<ServiceCategory, 'id'>) =>
     apiClient.post<ServiceCategory>('/service-categories/', data),
