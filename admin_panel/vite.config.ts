@@ -11,6 +11,19 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // Proxy disabled - using production backend directly via VITE_API_BASE_URL
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor':  ['react', 'react-dom', 'react-router-dom'],
+          'query-vendor':  ['@tanstack/react-query'],
+          'chart-vendor':  ['recharts'],
+          'form-vendor':   ['react-hook-form', '@hookform/resolvers', 'zod'],
+          'ui-vendor':     ['styled-components', 'react-hot-toast'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
   },
 })

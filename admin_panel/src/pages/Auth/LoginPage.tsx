@@ -50,24 +50,23 @@ const StyledWrapper = styled.div`
   .holo-input {
     width: 100%;
     height: 52px;
-    background: rgba(0, 12, 36, 0.75);
+    background: rgba(255, 255, 255, 0.95);
     border: none;
     outline: none;
     padding: 0 48px 0 18px;
-    color: rgba(0, 195, 255, 0.95);
-    font-family: 'Inter', 'Orbitron', sans-serif;
+    color: #1e40af;
+    font-family: 'Inter', sans-serif;
     font-size: 15px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     border-radius: 6px;
-    box-shadow: 0 0 15px rgba(0, 140, 255, 0.25), inset 0 0 10px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 15px rgba(0, 140, 255, 0.12), inset 0 1px 3px rgba(0, 0, 0, 0.06);
     transition: all 0.3s ease;
-    text-shadow: 0 0 5px rgba(0, 160, 255, 0.6);
     z-index: 1;
     position: relative;
   }
 
   .holo-input::placeholder {
-    color: rgba(0, 110, 200, 0.4);
+    color: rgba(100, 140, 200, 0.55);
   }
 
   .input-border {
@@ -154,9 +153,9 @@ const StyledWrapper = styled.div`
   }
 
   .holo-input:focus {
-    background: rgba(0, 22, 46, 0.85);
-    box-shadow: 0 0 25px rgba(0, 150, 255, 0.35), inset 0 0 15px rgba(0, 0, 0, 0.8);
-    color: rgba(0, 220, 255, 1);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.18), inset 0 1px 3px rgba(0, 0, 0, 0.04);
+    color: #1e3a8a;
   }
   .holo-input:focus ~ .input-border { border-color: rgba(0, 180, 255, 0.65); }
   .holo-input:focus ~ .input-border::before,
