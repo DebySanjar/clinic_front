@@ -14,12 +14,13 @@ import { WEEKDAYS_FULL, cn } from '@/utils'
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
 const schema = z.object({
-  first_name:  z.string().min(1, 'Ism kiritilmagan'),
-  last_name:   z.string().min(1, 'Familiya kiritilmagan'),
-  speciality:  z.string().min(1, 'Mutaxassislik kiritilmagan'),
-  phone:       z.string().optional().default('+998'),
+  first_name:    z.string().min(1, 'Ism kiritilmagan'),
+  last_name:     z.string().min(1, 'Familiya kiritilmagan'),
+  gender:        z.enum(['male', 'female']).default('male'),
+  speciality:    z.string().min(1, 'Mutaxassislik kiritilmagan'),
+  phone:         z.string().optional().default('+998'),
   slot_duration: z.coerce.number().min(10).max(120),
-  is_active:   z.boolean().default(true),
+  is_active:     z.boolean().default(true),
 })
 type FormData = z.infer<typeof schema>
 
@@ -225,9 +226,9 @@ export default function DoctorsPage() {
   )
 
   // Form
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { slot_duration: 30, is_active: true, phone: '+998' },
+    defaultValues: { slot_duration: 30, is_active: true, phone: '+998', gender: 'male' as const },
   })
 
   // Mutations
@@ -254,7 +255,7 @@ export default function DoctorsPage() {
     setSelectedServices([])
     setWorkStart('09:00'); setWorkEnd('18:00')
     setBreakStart(''); setBreakEnd(''); setShowBreak(false)
-    reset({ slot_duration: 30, is_active: true, phone: '+998' })
+    reset({ slot_duration: 30, is_active: true, phone: '+998', gender: 'male' })
     setModalOpen(true)
   }
 
@@ -270,6 +271,7 @@ export default function DoctorsPage() {
     reset({
       first_name:    doctor.first_name,
       last_name:     doctor.last_name,
+      gender:        doctor.gender || 'male',
       speciality:    doctor.speciality,
       phone:         doctor.phone || '+998',
       slot_duration: doctor.slot_duration,
@@ -283,6 +285,7 @@ export default function DoctorsPage() {
   const onSubmit = (data: FormData) => {
     const payload: DoctorFormData = {
       ...data,
+      gender:      data.gender,
       telegram_id: null,
       photo: null,
       work_days:   selectedWorkDays,
@@ -386,6 +389,25 @@ export default function DoctorsPage() {
               error={errors.first_name?.message} {...register('first_name')} />
             <Input id="last_name" label="Familiya *" placeholder="Karimov"
               error={errors.last_name?.message} {...register('last_name')} />
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label className="label">Jins</label>
+            <div className="flex gap-3">
+              {([['male', '👨 Erkak'], ['female', '👩 Ayol']] as const).map(([val, lbl]) => (
+                <label key={val}
+                  className={cn(
+                    'flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 cursor-pointer transition-all text-sm font-semibold',
+                    String(watch('gender')) === val
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                  )}>
+                  <input type="radio" value={val} {...register('gender')} className="sr-only" />
+                  {lbl}
+                </label>
+              ))}
+            </div>
           </div>
 
           {/* Speciality - datalist for autocomplete */}
