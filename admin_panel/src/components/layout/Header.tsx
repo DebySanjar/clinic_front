@@ -86,9 +86,12 @@ export default function Header() {
 
         {/* Today date */}
         <span className="text-sm text-gray-400 hidden sm:block">
-          {new Date().toLocaleDateString('uz-UZ', {
-            weekday: 'long', day: 'numeric', month: 'long'
-          })}
+          {(() => {
+            const d = new Date()
+            const days = ['Yakshanba','Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba']
+            const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr']
+            return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
+          })()}
         </span>
 
         {/* Logout button */}

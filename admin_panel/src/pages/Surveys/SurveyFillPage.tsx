@@ -185,13 +185,39 @@ export default function SurveyFillPage() {
     e.preventDefault()
     if (!survey) return
 
-    // Validate required
+    // Validate ALL questions — required AND non-empty check
     for (const q of survey.questions) {
-      if (q.is_required && !answers[q.id]?.trim()) {
-        setError(`"${q.question_text}" majburiy javob berilmagan`)
+      const val = (answers[q.id] || '').trim()
+
+      if (q.is_required && !val) {
+        setError(`"${q.question_text}" — majburiy javob berilmagan`)
         return
       }
+
+      // Type-specific validation
+      if (val) {
+        if (q.question_type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+          setError(`"${q.question_text}" — to'g'ri email kiriting`)
+          return
+        }
+        if (q.question_type === 'phone' && val.replace(/\D/g, '').length < 9) {
+          setError(`"${q.question_text}" — to'g'ri telefon raqam kiriting`)
+          return
+        }
+        if (q.question_type === 'number' && isNaN(Number(val))) {
+          setError(`"${q.question_text}" — faqat son kiritilishi kerak`)
+          return
+        }
+      }
     }
+
+    // At least one answer must be given
+    const hasAnyAnswer = survey.questions.some((q: any) => (answers[q.id] || '').trim())
+    if (!hasAnyAnswer) {
+      setError('Kamida bitta savolga javob bering')
+      return
+    }
+
     setError('')
     setSubmitting(true)
 

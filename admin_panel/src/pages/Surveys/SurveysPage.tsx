@@ -75,12 +75,25 @@ export default function SurveysPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((s: any) => (
             <div key={s.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
-              <div className="h-1.5 bg-gradient-to-r from-primary-500 to-purple-500" />
               <div className="p-5">
                 {/* Header */}
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <h3 className="font-bold text-gray-900 text-sm leading-tight line-clamp-2 flex-1">{s.title}</h3>
-                  <Badge className={STATUS_COLORS[s.status]}>{STATUS_LABELS[s.status]}</Badge>
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    {/* Eye - preview */}
+                    <button
+                      onClick={() => window.open(`/survey/${s.slug}`, '_blank')}
+                      title="So'rovnomani ko'rish"
+                      className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-primary-100 hover:text-primary-600
+                                 flex items-center justify-center text-gray-400 transition-colors"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                      </svg>
+                    </button>
+                    <Badge className={STATUS_COLORS[s.status]}>{STATUS_LABELS[s.status]}</Badge>
+                  </div>
                 </div>
 
                 {/* Description */}
