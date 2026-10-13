@@ -152,7 +152,7 @@ function QuestionField({ q, value, onChange }: {
     case 'email':
       return <input type="email" value={value} onChange={e => onChange(e.target.value)} placeholder={q.placeholder || 'email@example.com'} className={base} />
     case 'phone':
-      return <input type="tel" value={value} onChange={e => onChange(e.target.value)} placeholder={q.placeholder || '+998 90 000 00 00'} className={base} />
+      return <input type="tel" value={value || '+998'} onChange={e => onChange(e.target.value)} placeholder="+998 90 000 00 00" className={base} />
     case 'number':
       return <input type="number" value={value} onChange={e => onChange(e.target.value)} placeholder={q.placeholder || '0'} className={base} />
     default:

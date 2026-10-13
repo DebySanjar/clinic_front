@@ -186,5 +186,5 @@ export const surveysApi = {
     apiClient.get<any>(`/surveys/${id}/stats/`),
 
   applicants: (surveyId?: number) =>
-    apiClient.get<any[]>('/surveys/applicants/', { params: surveyId ? { survey_id: surveyId } : {} }),
+    apiClient.get<any[]>('/survey-applicants/', { params: surveyId ? { survey_id: surveyId } : {} }),
 }
