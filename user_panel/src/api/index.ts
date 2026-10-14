@@ -18,9 +18,10 @@ function toArray<T>(data: T[] | { results: T[] }): T[] {
 
 // ─── Doctors ─────────────────────────────────────────────────────────────────
 
-export const getDoctors = () =>
-  api.get<Doctor[] | { results: Doctor[] }>('/doctors/', { params: { is_active: true } })
-    .then(r => toArray(r.data))
+export const getDoctors = (serviceId?: number) =>
+  api.get<Doctor[] | { results: Doctor[] }>('/doctors/', {
+    params: { is_active: true, ...(serviceId ? { service_id: serviceId } : {}) }
+  }).then(r => toArray(r.data))
 
 export const getDoctor = (id: number) =>
   api.get<Doctor>(`/doctors/${id}/`).then(r => r.data)

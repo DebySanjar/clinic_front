@@ -27,8 +27,8 @@ export const useBookingStore = create<BookingStore>((set) => ({
   time: null,
   patient: null,
 
-  setDoctor: (doctor) => set({ doctor, service: null, date: null, time: null }),
-  setService: (service) => set({ service, date: null, time: null }),
+  setDoctor: (doctor) => set({ doctor, date: null, time: null }),
+  setService: (service) => set({ service, doctor: null, date: null, time: null }),
   setDate: (date) => set({ date, time: null }),
   setTime: (time) => set({ time }),
   setPatient: (patient) => set({ patient }),

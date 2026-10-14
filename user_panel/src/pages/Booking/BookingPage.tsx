@@ -12,58 +12,21 @@ import { formatCurrency, getNextDays, formatDate, formatTime } from '@/utils'
 import { Spinner, PageHeader, StepBar, SelectCard, BottomBtn, EmptyState } from '@/components/ui'
 import { cn } from '@/utils'
 
-// ─── Step 1: Shifokor ────────────────────────────────────────────────────────
+// ─── Step 1: Xizmat ──────────────────────────────────────────────────────────
 
-function StepDoctor({ onNext }: { onNext: () => void }) {
-  const { doctor, setDoctor } = useBookingStore()
-  const { data: doctors, isLoading } = useQuery({ queryKey: ['doctors'], queryFn: getDoctors })
+function StepService({ onNext }: { onNext: () => void }) {
+  const { service, setService } = useBookingStore()
 
-  return (
-    <div className="pb-28">
-      <PageHeader title="Shifokorni tanlang" subtitle="Qaysi mutaxassisga murojaat qilasiz?" />
-      {isLoading ? <Spinner /> : (
-        <div className="px-4 space-y-2 mt-1">
-          {doctors?.map(doc => (
-            <SelectCard key={doc.id} selected={doctor?.id === doc.id}
-              onClick={() => { setDoctor(doc); TWA.haptic.select() }}>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-sm font-bold text-primary-700">
-                    {doc.first_name[0]}{doc.last_name[0]}
-                  </span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 text-sm">Dr. {doc.full_name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{doc.speciality}</p>
-                </div>
-                {doctor?.id === doc.id && (
-                  <CheckMark />
-                )}
-              </div>
-            </SelectCard>
-          ))}
-        </div>
-      )}
-      <BottomBtn label="Davom etish" onClick={onNext} disabled={!doctor} />
-    </div>
-  )
-}
-
-// ─── Step 2: Xizmat ──────────────────────────────────────────────────────────
-
-function StepService({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
-  const { doctor, service, setService } = useBookingStore()
   const { data: services, isLoading } = useQuery({
-    queryKey: ['services', doctor?.id],
-    queryFn: () => getServices(doctor!.id),
-    enabled: !!doctor,
+    queryKey: ['all-services'],
+    queryFn: () => getServices(),
   })
 
   return (
     <div className="pb-28">
-      <PageHeader title="Xizmatni tanlang" subtitle={`Dr. ${doctor?.full_name}`} back={onBack} />
+      <PageHeader title="Xizmatni tanlang" subtitle="Qanday xizmat kerak?" />
       {isLoading ? <Spinner /> : !services?.length ? (
-        <EmptyState title="Xizmat topilmadi" desc="Bu shifokor uchun xizmatlar kiritilmagan" />
+        <EmptyState title="Xizmat topilmadi" desc="Hozircha xizmatlar kiritilmagan" />
       ) : (
         <div className="px-4 space-y-2 mt-1">
           {services.map(svc => (
@@ -72,9 +35,6 @@ function StepService({ onNext, onBack }: { onNext: () => void; onBack: () => voi
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-900 text-sm">{svc.name}</p>
-                  {svc.category_name && (
-                    <p className="text-xs text-gray-400 mt-0.5">{svc.category_name}</p>
-                  )}
                   <p className="text-xs text-gray-400 mt-1">{svc.duration} daqiqa</p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
@@ -89,6 +49,52 @@ function StepService({ onNext, onBack }: { onNext: () => void; onBack: () => voi
         </div>
       )}
       <BottomBtn label="Davom etish" onClick={onNext} disabled={!service} />
+    </div>
+  )
+}
+
+// ─── Step 2: Shifokor ─────────────────────────────────────────────────────────
+
+function StepDoctor({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const { service, doctor, setDoctor } = useBookingStore()
+
+  const { data: doctors, isLoading } = useQuery({
+    queryKey: ['doctors-for-service', service?.id],
+    queryFn: () => getDoctors(service?.id),
+    enabled: !!service,
+  })
+
+  return (
+    <div className="pb-28">
+      <PageHeader
+        title="Shifokorni tanlang"
+        subtitle={service?.name}
+        back={onBack}
+      />
+      {isLoading ? <Spinner /> : !doctors?.length ? (
+        <EmptyState title="Shifokor topilmadi" desc="Bu xizmatni bajaradigan shifokor yo'q" />
+      ) : (
+        <div className="px-4 space-y-2 mt-1">
+          {doctors.map(doc => (
+            <SelectCard key={doc.id} selected={doctor?.id === doc.id}
+              onClick={() => { setDoctor(doc); TWA.haptic.select() }}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-sm font-bold text-primary-700">
+                    {doc.first_name[0]}{doc.last_name[0]}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 text-sm">Dr. {doc.full_name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{doc.speciality}</p>
+                </div>
+                {doctor?.id === doc.id && <CheckMark />}
+              </div>
+            </SelectCard>
+          ))}
+        </div>
+      )}
+      <BottomBtn label="Davom etish" onClick={onNext} disabled={!doctor} />
     </div>
   )
 }
@@ -144,7 +150,6 @@ function StepTime({ onNext, onBack }: { onNext: () => void; onBack: () => void }
   })
 
   const slots = data?.slots ?? []
-  const available = slots.filter(s => s.is_available)
 
   return (
     <div className="pb-28">
@@ -153,7 +158,7 @@ function StepTime({ onNext, onBack }: { onNext: () => void; onBack: () => void }
         subtitle={date ? `${formatDate(date)} — Dr. ${doctor?.full_name}` : ''}
         back={onBack}
       />
-      {isLoading ? <Spinner /> : !available.length ? (
+      {isLoading ? <Spinner /> : !slots.filter(s => s.is_available).length ? (
         <EmptyState title="Bo'sh vaqt yo'q" desc="Boshqa kun tanlang" />
       ) : (
         <div className="px-4 mt-2">
@@ -217,14 +222,14 @@ function StepConfirm({ onBack }: { onBack: () => void }) {
       const msg = err?.response?.data
       toast.error(typeof msg === 'object'
         ? Object.values(msg).flat().join(' ')
-        : "Xato yuz berdi")
+        : 'Xato yuz berdi')
     },
   })
 
   const rows = [
-    { label: 'Shifokor',    value: `Dr. ${doctor?.full_name}` },
     { label: 'Xizmat',      value: service?.name ?? '—' },
     { label: 'Narx',        value: service ? formatCurrency(service.price) : '—' },
+    { label: 'Shifokor',    value: `Dr. ${doctor?.full_name}` },
     { label: 'Sana',        value: date ? formatDate(date) : '—' },
     { label: 'Vaqt',        value: time ? formatTime(time) : '—' },
     { label: 'Davomiyligi', value: service ? `${service.duration} daqiqa` : '—' },
@@ -284,17 +289,17 @@ export default function BookingPage() {
       <div className="absolute inset-x-0 top-0 h-32 bg-grid-pattern bg-grid-mask pointer-events-none" />
       <div className="relative z-10 flex-1">
         <StepBar current={step} total={TOTAL} />
-        {step === 1 && <StepDoctor onNext={next} />}
-        {step === 2 && <StepService onNext={next} onBack={back} />}
-        {step === 3 && <StepDate onNext={next} onBack={back} />}
-        {step === 4 && <StepTime onNext={next} onBack={back} />}
+        {step === 1 && <StepService onNext={next} />}
+        {step === 2 && <StepDoctor  onNext={next} onBack={back} />}
+        {step === 3 && <StepDate    onNext={next} onBack={back} />}
+        {step === 4 && <StepTime    onNext={next} onBack={back} />}
         {step === 5 && <StepConfirm onBack={back} />}
       </div>
     </div>
   )
 }
 
-// ─── Shared check mark ───────────────────────────────────────────────────────
+// ─── CheckMark ────────────────────────────────────────────────────────────────
 
 function CheckMark() {
   return (
