@@ -24,12 +24,6 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 
-const SPECIALITIES = [
-  'Terapevt stomatolog', 'Xirurg stomatolog', 'Ortodont',
-  'Ortoped stomatolog',  'Parodontolog',      'Endodont',
-  'Pediatrik stomatolog',
-]
-
 // ─── DoctorCard ──────────────────────────────────────────────────────────────
 
 function DoctorCard({ doctor, onEdit, onDelete }: {
@@ -323,12 +317,14 @@ export default function DoctorsPage() {
               </div>
             </div>
 
-            {/* Speciality */}
+            {/* Speciality — xizmatlar nomidan datalist */}
             <div>
               <label className="label">Mutaxassislik *</label>
-              <input id="speciality" list="spec-list" placeholder="Terapevt stomatolog"
+              <input id="speciality" list="spec-list" placeholder="Mutaxassislik tanlang yoki kiriting"
                 className={cn('input', errors.speciality && 'border-red-400')} {...register('speciality')} />
-              <datalist id="spec-list">{SPECIALITIES.map(s => <option key={s} value={s} />)}</datalist>
+              <datalist id="spec-list">
+                {services.map(s => <option key={s.id} value={s.name} />)}
+              </datalist>
               {errors.speciality && <p className="text-xs text-red-500 mt-1">{errors.speciality.message}</p>}
             </div>
 

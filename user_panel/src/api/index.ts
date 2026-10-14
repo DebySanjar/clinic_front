@@ -35,7 +35,7 @@ export const getDoctorSlots = (doctorId: number, date: string) =>
 
 export const getServices = (doctorId?: number) =>
   api.get<Service[] | { results: Service[] }>('/services/', {
-    params: { is_active: true, ...(doctorId ? { doctor_id: doctorId } : {}) }
+    params: { ...(doctorId ? { doctor_id: doctorId } : {}) }
   }).then(r => toArray(r.data))
 
 // ─── Patient ─────────────────────────────────────────────────────────────────

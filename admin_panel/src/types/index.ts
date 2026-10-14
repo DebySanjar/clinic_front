@@ -53,8 +53,6 @@ export interface Service {
   price: number
   price_formatted: string
   duration: number
-  category: number | null
-  category_name: string | null
   is_active: boolean
   doctors?: number[]
 }

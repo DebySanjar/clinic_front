@@ -73,7 +73,7 @@ export default function ServicesPage() {
   const closeModal = () => { setModalOpen(false); setEditService(null) }
 
   const onSubmit = (data: FormData) => {
-    const payload = { ...data, category: null } as ServiceFormData
+    const payload = { ...data } as ServiceFormData
     editService
       ? updateMut.mutate({ id: editService.id, data: payload })
       : createMut.mutate(payload)
