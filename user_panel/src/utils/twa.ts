@@ -63,34 +63,37 @@ interface TelegramWebApp {
 
 const twa = window.Telegram?.WebApp
 
+// Dev muhitida test user
+const DEV_USER = {
+  id: 99999999,
+  first_name: 'Test',
+  last_name: 'User',
+}
+
 export const TWA = {
-  /** SDK mavjudligi */
   isAvailable: !!twa,
 
-  /** Ilovani tayyor deb belgilash */
   ready() {
     twa?.ready()
     twa?.expand()
   },
 
-  /** Joriy foydalanuvchi (Telegram user) */
   get user() {
-    return twa?.initDataUnsafe?.user ?? null
+    return twa?.initDataUnsafe?.user ?? (import.meta.env.DEV ? DEV_USER : null)
   },
 
   get userId(): number | null {
-    return twa?.initDataUnsafe?.user?.id ?? null
+    return twa?.initDataUnsafe?.user?.id ?? (import.meta.env.DEV ? DEV_USER.id : null)
   },
 
   get firstName(): string {
-    return twa?.initDataUnsafe?.user?.first_name ?? 'Foydalanuvchi'
+    return twa?.initDataUnsafe?.user?.first_name ?? (import.meta.env.DEV ? DEV_USER.first_name : 'Foydalanuvchi')
   },
 
   get initData(): string {
     return twa?.initData ?? ''
   },
 
-  /** Rang sxemasi */
   get isDark(): boolean {
     return twa?.colorScheme === 'dark'
   },
